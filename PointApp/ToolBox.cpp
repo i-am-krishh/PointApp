@@ -3,6 +3,8 @@
 #include <QToolButton>
 #include <QFrame>
 #include <QIcon>
+#include <QLabel>
+#include <QFont>
 
 ToolBox::ToolBox(QWidget* parent) : QWidget(parent)
 {
@@ -16,10 +18,9 @@ ToolBox::~ToolBox()
 void ToolBox::createTools()
 {
     QVBoxLayout* layout = new QVBoxLayout;
-    layout->setContentsMargins(4, 8, 4, 8);
-    layout->setSpacing(4);
+    layout->setContentsMargins(6, 10, 6, 10);
+    layout->setSpacing(6);
 
-    // name, icon path
     struct Tool {
         QString name;
         QString icon;
@@ -45,38 +46,70 @@ void ToolBox::createTools()
         {"Del",  ":/icons/icons/del.svg"}
     };
 
-    // Helper lambda to make one button
     auto makeButton = [&](const Tool& tool)
-    {
-        QToolButton* btn = new QToolButton;
-        btn->setText(tool.name.toUpper());
-        btn->setIcon(QIcon(tool.icon));
-        btn->setIconSize(QSize(24, 24));
-        btn->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
-        btn->setFixedSize(62, 54);
-        btn->setCheckable(true);
-
-        connect(btn, &QToolButton::clicked, this, [=]()
         {
-            for (QToolButton* other : findChildren<QToolButton*>())
-            {
-                if (other != btn)
-                    other->setChecked(false);
-            }
-            emit toolSelected(tool.name);
-        });
+            QToolButton* btn = new QToolButton;
 
-        layout->addWidget(btn, 0, Qt::AlignHCenter);
-    };
+            btn->setText(tool.name.toUpper());
+            btn->setIcon(QIcon(tool.icon));
+            btn->setIconSize(QSize(26, 26));
+            btn->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+            btn->setFixedSize(70, 60);
+            btn->setCheckable(true);
 
-    // Add group 1
-    for (auto& t : group1) makeButton(t);    
-    // Add group 2
+            connect(btn, &QToolButton::clicked, this, [=]()
+                {
+                    for (QToolButton* other : findChildren<QToolButton*>())
+                    {
+                        if (other != btn)
+                            other->setChecked(false);
+                    }
+
+                    emit toolSelected(tool.name);
+                });
+
+            layout->addWidget(btn, 0, Qt::AlignHCenter);
+        };
+
+    auto addGroupTitle = [&](QString title)
+        {
+            QLabel* label = new QLabel(title);
+            label->setAlignment(Qt::AlignCenter);
+
+            QFont f = label->font();
+            f.setBold(true);
+            f.setPointSize(10);
+            label->setFont(f);
+
+            layout->addSpacing(4);
+            layout->addWidget(label);
+        };
+
+    auto addSeparator = [&]()
+        {
+            QFrame* line = new QFrame;
+            line->setFrameShape(QFrame::HLine);
+            line->setFrameShadow(QFrame::Sunken);
+            layout->addWidget(line);
+        };
+
+    // Group 1
+    addGroupTitle("Transform");
+    for (auto& t : group1) makeButton(t);
+
+    addSeparator();
+
+    // Group 2
+    addGroupTitle("Shapes");
     for (auto& t : group2) makeButton(t);
-    // Add group 3
+
+    addSeparator();
+
+    // Group 3
+    addGroupTitle("Object");
     for (auto& t : group3) makeButton(t);
 
     layout->addStretch();
-    setLayout(layout);
 
+    setLayout(layout);
 }
