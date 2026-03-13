@@ -15,7 +15,7 @@
 #include <QTextStream>
 
 #include <QApplication>
-
+#include<PropertyPanel.h>
 
 PointApp::PointApp(QWidget *parent)
     : QMainWindow(parent)
@@ -166,10 +166,11 @@ void PointApp::createLayout()
 
     toolBox = new ToolBox;
     canvas = new Canvas;
+    propertyPanel = new PropertyPanel;
 
     workspaceLayout->addWidget(toolBox);
     workspaceLayout->addWidget(canvas);
-
+    workspaceLayout->addWidget(propertyPanel);
     colorBar = new ColorBar;
 
     mainLayout->addLayout(workspaceLayout);
@@ -179,7 +180,9 @@ void PointApp::createLayout()
 
     //connect(colorBar, &ColorBar::colorSelected, canvas, &Canvas::setColor);
     connect(toolBox, &ToolBox::toolSelected,canvas, &Canvas::showTool);
-    statusBar()->showMessage("Ready");
+    connect(toolBox, &ToolBox::toolSelected, propertyPanel, &PropertyPanel::updateName);
+
+    statusBar()->showMessage("Lower Bar");
 
 }
 

@@ -39,6 +39,7 @@
     <QtInstall>QT_msvc</QtInstall>
     <QtModules>core;gui;widgets;3dcore;3danimation;3dextras;3dinput;3dlogic;3drender;opengl;openglwidgets</QtModules>
     <QtBuildConfig>debug</QtBuildConfig>
+    <QtInstall>6.10.2_msvc2022_64</QtInstall>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="QtSettings">
     <QtInstall>6.11.0_msvc2022_64</QtInstall>
@@ -102,6 +103,7 @@ glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     <ClCompile Include="ColorBar.cpp" />
     <ClCompile Include="Cone.cpp" />
     <ClCompile Include="Cuboid.cpp" />
+    <ClCompile Include="PropertyPanel.cpp" />
     <ClCompile Include="Plane.cpp" />
     <ClCompile Include="Sphere.cpp" />
     <ClCompile Include="ToolBox.cpp" />
@@ -122,6 +124,7 @@ glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     <QtMoc Include="Sphere.h" />
   </ItemGroup>
   <ItemGroup>
+    <QtMoc Include="PropertyPanel.h" />
     <QtMoc Include="Cone.h" />
     <QtMoc Include="Plane.h" />
   </ItemGroup>
