@@ -4,6 +4,8 @@
 #include "ToolBox.h"
 #include "ColorBar.h"
 #include "Canvas.h"
+#include<PropertyPanel.h>
+
 
 class PointApp : public QMainWindow
 {
@@ -26,6 +28,7 @@ private:
     ToolBox *toolBox;
     ColorBar *colorBar;
     Canvas *canvas;
+    PropertyPanel* propertyPanel;
 
     QString currentFile;
 
