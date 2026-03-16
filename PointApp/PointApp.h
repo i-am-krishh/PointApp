@@ -4,6 +4,8 @@
 #include "ToolBox.h"
 #include "ColorBar.h"
 #include "Canvas.h"
+#include<PropertyPanel.h>
+#include <BaseShape.h>
 
 class PointApp : public QMainWindow
 {
@@ -14,6 +16,7 @@ public:
     ~PointApp();
 
 private slots:
+    void onShapeAdded(BaseShape* shape);
 
     void newFile();
     void openFile();
@@ -24,8 +27,8 @@ private:
     void createMenu();
     void createLayout();
     ToolBox *toolBox;
-    ColorBar *colorBar;
     Canvas *canvas;
+    PropertyPanel* propertyPanel;
 
     QString currentFile;
 

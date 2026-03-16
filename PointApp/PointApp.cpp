@@ -15,16 +15,17 @@
 #include <QTextStream>
 
 #include <QApplication>
-
+#include<PropertyPanel.h>
 
 PointApp::PointApp(QWidget *parent)
     : QMainWindow(parent)
 {
-    setWindowTitle("DPoint");
+    setWindowTitle("Sketch3D");
     resize(900, 600);
 
     createMenu();
     createLayout();
+    statusBar()->showMessage("Ready");
 }
 
 PointApp::~PointApp()
@@ -128,7 +129,7 @@ void PointApp::createMenu()
     //resource i use:https://doc.qt.io/qt-6/qtwidgets-mainwindows-menus-example.html
     //https://zetcode.com/gui/qt5/menusandtoolbars/
 
-    QMenu* file = menuBar()->addMenu("&file");
+    QMenu* file = menuBar()->addMenu("File");
 
     QAction* newAct = file->addAction("New");
     QAction* openAct = file->addAction("Open");
@@ -141,48 +142,74 @@ void PointApp::createMenu()
     connect(saveAct, &QAction::triggered, this, &PointApp::saveSTL);
     connect(exitAct, &QAction::triggered, this, &PointApp::exitApp);
 
-    QMenu* edit = menuBar()->addMenu("edit");
+    QMenu* edit = menuBar()->addMenu("Edit");
     edit->addAction("Undo");
+    edit->addAction("Redo");
     edit->addAction("Cut");
     edit->addAction("Copy");
     edit->addAction("Paste");
 
-    menuBar()->addMenu("View");
-    menuBar()->addMenu("Image");
-    menuBar()->addMenu("Colors");
-    menuBar()->addMenu("Help");
+    QMenu* view = menuBar()->addMenu("View");
+    view->addAction("Zoom In");
+    view->addAction("Zoom Out");
+
+    QMenu* modify = menuBar()->addMenu("Modify");
+    modify->addAction("Move");
+    modify->addAction("Rotate");
+
+    QMenu* help = menuBar()->addMenu("Help");
+    help->addAction("Documentation");
+    help->addAction("Tutorials");
+    help->addAction("About");
+ 
 
 }
 
 void PointApp::createLayout()
 {
-
     QWidget* central = new QWidget;
     setCentralWidget(central);
 
-    QVBoxLayout *mainLayout = new QVBoxLayout();
-    QHBoxLayout *workspaceLayout = new QHBoxLayout();
-    
+    QVBoxLayout* mainLayout = new QVBoxLayout();
+    QHBoxLayout* workspaceLayout = new QHBoxLayout();
 
     toolBox = new ToolBox;
     canvas = new Canvas;
+    propertyPanel = new PropertyPanel;
 
     workspaceLayout->addWidget(toolBox);
-    workspaceLayout->addWidget(canvas);
-
-    colorBar = new ColorBar;
+    workspaceLayout->addWidget(canvas, 1);
+    workspaceLayout->addWidget(propertyPanel);
 
     mainLayout->addLayout(workspaceLayout);
-    //mainLayout->addWidget(colorBar);
 
     central->setLayout(mainLayout);
 
-    //connect(colorBar, &ColorBar::colorSelected, canvas, &Canvas::setColor);
-    connect(toolBox, &ToolBox::toolSelected,canvas, &Canvas::showTool);
-    statusBar()->showMessage("Ready");
+   
 
+    // Tool select → Canvas ko batao
+    connect(toolBox,
+        &ToolBox::toolSelected,
+        canvas,
+        &Canvas::onToolSelected);
+
+    // Canvas ne shape create kiya
+    connect(canvas,
+        &Canvas::shapeAdded,
+        this,
+        &PointApp::onShapeAdded);
+
+    statusBar()->showMessage("Ready");
 }
 
+void PointApp::onShapeAdded(BaseShape* shape)
+{
+    if (!shape) return;
+
+    propertyPanel->loadShape(shape);
+
+    statusBar()->showMessage("Shape selected : " + shape->shapeName());
+}
 
 
 
