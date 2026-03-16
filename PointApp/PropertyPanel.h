@@ -34,7 +34,8 @@ private slots:
     void onVisibilityToggled(bool checked);
     void updateMeasurements();
     void onShapeListItemSelected(QListWidgetItem* item);
-
+    void onLockedToggled(bool checked);
+  
 private:
     BaseShape* currentShape = nullptr;
     QMap<QString, BaseShape*> shapeMap;  // Map to store shape pointers by name
@@ -58,6 +59,8 @@ private:
 
     QPushButton* visibleBtn;
     QPushButton* lockedBtn;
+    void setControlsEnabled(bool enabled);// helper to enable/disable all inputs
 
     QListWidget* shapeList;
+
 };
